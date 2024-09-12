@@ -8,11 +8,13 @@ export const searchArticles = (params) => async (dispatch, getState) => {
       ...params,
       token, 
     });
+    console.log("🚀 ~ searchArticles ~ response:", response)
     
     dispatch({
       type: 'ARTICLES_FETCH_SUCCESS',
       payload: response.articles, 
     });
+    return response;
   } catch (error) {
     console.error('Error fetching articles', error);
     dispatch({
