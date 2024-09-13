@@ -35,6 +35,7 @@ const Header = () => {
                   <details>
                     <summary>Welcome, {user?.name}</summary>
                     <ul className="bg-base-100 rounded-t-none p-2">
+                      <li><Link to="/me">Profile</Link></li>
                       <li>
                         <a onClick={handleLogout}>Logout</a>
                       </li>

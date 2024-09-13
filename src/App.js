@@ -6,10 +6,11 @@ import RegisterPage from './pages/Register';
 import PrivateRoute from './PrivateRoute';
 import Dashboard from './pages/Dashboard';
 import ArticleSearch from './pages/ArticleSearch';
+import ProfilePage from './pages/Profile';
 
 function App() {
   return (
-    <Router>
+  <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<HomePage /> } />
@@ -17,6 +18,7 @@ function App() {
           <Route path="register" element={<RegisterPage />} />
           <Route path="dashboard" element={<PrivateRoute component={Dashboard} />} />
           <Route path="articles" element={<PrivateRoute component={ArticleSearch} />} />
+          <Route path="me" element={<PrivateRoute component={ProfilePage} />} />
         </Route>
       </Routes>
     </Router>

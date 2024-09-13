@@ -1,10 +1,11 @@
-import axios from 'axios';
-import {API_BASE_URL} from "../utils/constants"
-const API_URL = API_BASE_URL+'/news/search';
+import apiService from './apiService'; // Use the configured apiService
 
-const searchArticles = async ({ keyword, from, to, source, category, limit, page, token, mainSource }) => {
+
+const API_URL = `/news/search`;
+
+const searchArticles = async ({ keyword, from, to, source, category, limit, page, mainSource }) => {
   try {
-    const response = await axios.post(
+    const response = await apiService.post(
       API_URL,
       {
         keyword,
@@ -15,11 +16,6 @@ const searchArticles = async ({ keyword, from, to, source, category, limit, page
         mainSource,
         limit,
         page,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the headers
-        },
       }
     );
     return response.data;
