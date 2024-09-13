@@ -21,7 +21,6 @@ const Register = () => {
         toast.error("Registration failed");
       }
     } catch (error) {
-      alert("Registration failed");
       toast.error("Registration failed");
       console.error("Registration failed", error);
       
