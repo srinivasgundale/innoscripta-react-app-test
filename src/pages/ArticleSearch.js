@@ -2,10 +2,10 @@ import { useState, useEffect, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { searchArticles } from "../store/actions/articleActions";
 import ArticleCard from "../components/common/ArticleCard";
-import Shimmer from "../components/common/Shimmer"; // Import Shimmer component
+import Shimmer from "../components/common/Shimmer"; 
 import { sources, newsCategories } from "./../utils/mockdata";
 import { FormInput } from "../components/common/FormInput";
-import { buildApiParams } from "../utils/apiUtils"; // Import the utility function
+import { buildApiParams } from "../utils/apiUtils"; 
 
 const ArticleSearch = () => {
   const [keyword, setKeyword] = useState("");
@@ -28,12 +28,11 @@ const ArticleSearch = () => {
   ];
   const dispatch = useDispatch();
 
-  // Load articles when component mounts
+  
   useEffect(() => {
     fetchArticles();
   }, [page]);
 
-  // Fetch articles based on the current state and filters
   const fetchArticles = async () => {
     setLoading(true);
     setError("");
@@ -54,13 +53,13 @@ const ArticleSearch = () => {
     }
   };
 
-  // Handle search button click
+  
   const handleSearch = async () => {
     setLoading(true);
     setError("");
-    setPage(0); // Reset to the first page
-    setHasMore(true); // Reset pagination state
-    setIsFilterApplied(true); // Mark filters as applied
+    setPage(0); 
+    setHasMore(true); 
+    setIsFilterApplied(true); 
 
     const params = buildApiParams(keyword, from, to, mainSource, source, category, 0, true);
     try {

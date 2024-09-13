@@ -10,7 +10,7 @@ export const login = async (data) => {
     return response.data; 
   } catch (error) {
     console.error('Login error', error);
-    throw error; // handle error accordingly
+    throw error; 
   }
 };
 
@@ -19,10 +19,10 @@ export const register = async (data) => {
     const response = await axios.post(`${API_URL}/register`, data);
     
     console.log("🚀 ~ register ~ response:", response)
-    return response.data; // Assuming the API returns { success: true }
+    return response.data; 
   } catch (error) {
     console.error('Registration error', error);
-    throw error; // handle error accordingly
+    throw error; 
   }
 };
 

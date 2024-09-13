@@ -1,7 +1,7 @@
 import articleService from './../../services/articleService';
 
 export const searchArticles = (params) => async (dispatch, getState) => {
-  const token = getState().auth.token; // Access token from Redux state
+  const token = getState().auth.token; 
 
   try {
     const response = await articleService.searchArticles({

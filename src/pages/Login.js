@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "./../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import authService from "../services/authService"; // Import the auth service
+import authService from "../services/authService"; 
 import toast from "react-hot-toast";
 const Login = () => {
   const {
@@ -24,7 +24,7 @@ const Login = () => {
     } catch (error) {
       console.error("Login failed", error);
       toast.error("Invalid credentials");
-      // Optionally show an error message to the user
+      
     }
   };
 
