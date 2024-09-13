@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { searchArticles } from "../store/actions/articleActions";
 import ArticleCard from "../components/common/ArticleCard";
 import Shimmer from "../components/common/Shimmer"; 
@@ -8,7 +8,10 @@ import { FormInput } from "../components/common/FormInput";
 import { buildApiParams } from "../utils/apiUtils"; 
 
 const ArticleSearch = () => {
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth); // Access user state to get main_source and sub_source
+
+  // State variables for filters
   const [keyword, setKeyword] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -22,14 +25,14 @@ const ArticleSearch = () => {
   const [articles, setArticles] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false); 
-  // const listOfCategories = [
-  //   { key: "nytimes", name: "NY Times" },
-  //   { key: "guardian", name: "Guardian" },
-  //   { key: "newsapi", name: "NewsAPI" },
-  // ];
-  const dispatch = useDispatch();
 
-  
+  useEffect(() => {
+    if (user) {
+      setMainSource(user.main_source || "All");
+      setSource(user.sub_source || "");
+    }
+  }, [user]);
+
   useEffect(() => {
     fetchArticles();
   }, [page]);
@@ -54,7 +57,6 @@ const ArticleSearch = () => {
     }
   };
 
-  
   const handleSearch = async () => {
     setLoading(true);
     setError("");
@@ -65,7 +67,6 @@ const ArticleSearch = () => {
     const params = buildApiParams(keyword, from, to, mainSource, source, category, 0, true);
     try {
       const response = await dispatch(searchArticles(params));
-
       setArticles(response.articles);
 
       if (response.articles.length < 10) {
@@ -97,6 +98,8 @@ const ArticleSearch = () => {
             <FormInput label="Keyword" value={keyword} onChange={(e) => setKeyword(e.target.value)} />
             <FormInput label="From" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
             <FormInput label="To" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+            
+            {/* Main Source Dropdown */}
             <FormInput
               label="News Provider"
               value={mainSource}
@@ -104,6 +107,8 @@ const ArticleSearch = () => {
               type="select"
               options={[{ value: "All", label: "All" }, ...mainSources.map((s) => ({ value: s.key, label: s.name }))]}
             />
+            
+            {/* Sub Source Dropdown (Visible if mainSource is newsapi and not All) */}
             {(mainSource === "newsapi" && mainSource !== "All") && (
               <FormInput
                 label="Source"
@@ -113,6 +118,8 @@ const ArticleSearch = () => {
                 options={[{ value: "", label: "All" }, ...sources.map((s) => ({ value: s.id, label: s.name }))]}
               />
             )}
+            
+            {/* Category Dropdown (Visible if mainSource is not nytimes and not All) */}
             {(mainSource !== "nytimes" && mainSource !== "All") && (
               <FormInput
                 label="Category"
