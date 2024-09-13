@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:8000/api/news/search';
+import {API_BASE_URL} from "../utils/constants"
+const API_URL = API_BASE_URL+'/news/search';
 
 const searchArticles = async ({ keyword, from, to, source, category, limit, page, token, mainSource }) => {
   try {
