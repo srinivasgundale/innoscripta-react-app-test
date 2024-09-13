@@ -2,8 +2,9 @@ import { useState, useEffect, Fragment } from "react";
 import { useDispatch } from "react-redux";
 import { searchArticles } from "../store/actions/articleActions";
 import ArticleCard from "../components/common/ArticleCard";
+import Shimmer from "../components/common/Shimmer"; // Import Shimmer component
 import { sources, newsCategories } from "./../utils/mockdata";
-import {FormInput} from "../components/common/FormInput";
+import { FormInput } from "../components/common/FormInput";
 import { buildApiParams } from "../utils/apiUtils"; // Import the utility function
 
 const ArticleSearch = () => {
@@ -19,6 +20,7 @@ const ArticleSearch = () => {
   const [isFilterApplied, setIsFilterApplied] = useState(false);
   const [articles, setArticles] = useState([]);
   const [hasMore, setHasMore] = useState(true);
+  const [loadMoreLoading, setLoadMoreLoading] = useState(false); 
   const listOfCategories = [
     { key: "nytimes", name: "NY Times" },
     { key: "guardian", name: "Guardian" },
@@ -76,8 +78,13 @@ const ArticleSearch = () => {
     }
   };
 
-  const handleLoadMore = () => {
-    setPage((prevPage) => prevPage + 1);
+  const handleLoadMore = async () => {
+    setLoadMoreLoading(true); 
+    try {
+      setPage((prevPage) => prevPage + 1);
+    } finally {
+      setLoadMoreLoading(false); 
+    }
   };
 
   return (
@@ -122,15 +129,22 @@ const ArticleSearch = () => {
 
           {/* Right Side Articles */}
           <div className="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            {loading && (
+              <>
+                <Shimmer />
+                <Shimmer />
+                <Shimmer />
+              </>
+            )}
             {error && <p className="text-red-500 mb-4">{error}</p>}
-            {articles.length > 0 ? (
+            {!loading && articles.length > 0 ? (
               articles.map((item, index) => (
                 <Fragment key={index}>
                   <ArticleCard article={item} />
                 </Fragment>
               ))
             ) : (
-              <p className="col-span-3 text-center">No articles found.</p>
+              !loading && <p className="col-span-3 text-center">No articles found.</p>
             )}
           </div>
         </div>
@@ -138,11 +152,12 @@ const ArticleSearch = () => {
         {/* Load More Button */}
         {hasMore && (
           <div className="flex justify-center mt-8">
-            <button onClick={handleLoadMore} className="btn btn-secondary">
-              Load More
+            <button onClick={handleLoadMore} className="btn btn-secondary" >
+              {loadMoreLoading ? "Loading..." : "Load More"}
             </button>
           </div>
         )}
+        
       </div>
     </main>
   );
