@@ -1311,3 +1311,8 @@ export const newsCategories = [
   { key: 'legalissues', name: 'Legal Issues' },
   { key: 'technologyreviews', name: 'Technology Reviews' },
 ];
+export const mainSources = [
+  { key: "nytimes", name: "NY Times" },
+  { key: "guardian", name: "Guardian" },
+  { key: "newsapi", name: "NewsAPI" },
+];

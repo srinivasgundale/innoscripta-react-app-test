@@ -1,13 +1,11 @@
 import apiService from '../../services/apiService'; 
+import { updateProfileSuccess } from '../slices/authSlice'; 
 
 export const updateProfileAction = (data) => async (dispatch) => {
   try {
-    const response = await apiService.put('/profile', data); 
+    const response = await apiService.put('/user/update', data); 
     if (response.data.success) {
-      dispatch({
-        type: 'UPDATE_PROFILE_SUCCESS',
-        payload: response.data.user, 
-      });
+      dispatch(updateProfileSuccess(response.data.user)); 
       return { success: true };
     } else {
       return { success: false };

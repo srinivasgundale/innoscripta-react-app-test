@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 import { searchArticles } from "../store/actions/articleActions";
 import ArticleCard from "../components/common/ArticleCard";
 import Shimmer from "../components/common/Shimmer"; 
-import { sources, newsCategories } from "./../utils/mockdata";
+import { sources, newsCategories, mainSources } from "./../utils/mockdata";
 import { FormInput } from "../components/common/FormInput";
 import { buildApiParams } from "../utils/apiUtils"; 
 
 const ArticleSearch = () => {
+  const { user } = useSelector((state) => state.auth);
   const [keyword, setKeyword] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
@@ -21,11 +22,11 @@ const ArticleSearch = () => {
   const [articles, setArticles] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [loadMoreLoading, setLoadMoreLoading] = useState(false); 
-  const listOfCategories = [
-    { key: "nytimes", name: "NY Times" },
-    { key: "guardian", name: "Guardian" },
-    { key: "newsapi", name: "NewsAPI" },
-  ];
+  // const listOfCategories = [
+  //   { key: "nytimes", name: "NY Times" },
+  //   { key: "guardian", name: "Guardian" },
+  //   { key: "newsapi", name: "NewsAPI" },
+  // ];
   const dispatch = useDispatch();
 
   
@@ -97,15 +98,15 @@ const ArticleSearch = () => {
             <FormInput label="From" type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
             <FormInput label="To" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
             <FormInput
-              label="Source"
+              label="News Provider"
               value={mainSource}
               onChange={(e) => setMainSource(e.target.value)}
               type="select"
-              options={[{ value: "All", label: "All" }, ...listOfCategories.map((s) => ({ value: s.key, label: s.name }))]}
+              options={[{ value: "All", label: "All" }, ...mainSources.map((s) => ({ value: s.key, label: s.name }))]}
             />
             {(mainSource === "newsapi" && mainSource !== "All") && (
               <FormInput
-                label="Sub Source"
+                label="Source"
                 value={source}
                 onChange={(e) => setSource(e.target.value)}
                 type="select"
