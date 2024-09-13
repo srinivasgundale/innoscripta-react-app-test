@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
-import { searchArticles } from '../store/actions/articleActions'; // Assuming you're using Thunks
-import { useSelector } from 'react-redux'; // If you're using Redux for storing articles
+import { searchArticles } from '../store/actions/articleActions'; 
 
+
+import ArticleCard from '../components/common/ArticleCard';
 const ArticleSearch = () => {
   const [keyword, setKeyword] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [source, setSource] = useState('');
   const [category, setCategory] = useState('');
-  const [page, setPage] = useState(0); // Current page for pagination
+  const [page, setPage] = useState(0); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isFilterApplied, setIsFilterApplied] = useState(false); // Track if filter is applied
@@ -43,7 +44,7 @@ const ArticleSearch = () => {
       const response = await dispatch(searchArticles(params));
       console.log("🚀 ~ fetchArticles ~ response:", response)
 
-      if (response.length < 10) {
+      if (response.articles.length < 10) {
         setHasMore(false); // If less than 10 articles are returned, no more pages
       }
 
@@ -97,112 +98,97 @@ const ArticleSearch = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Search Articles</h1>
-      
-      {/* Search Input Fields */}
-      <div className="mb-4">
-        <label>Keyword</label>
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label>From</label>
-        <input
-          type="date"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label>To</label>
-        <input
-          type="date"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label>Source</label>
-        <input
-          type="text"
-          value={source}
-          onChange={(e) => setSource(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-      <div className="mb-4">
-        <label>Category</label>
-        <input
-          type="text"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-
-      <button
-        onClick={handleSearch}
-        className="btn btn-primary mt-4"
-        disabled={loading}
-      >
-        {loading ? 'Searching...' : 'Search'}
-      </button>
-
-      {error && <p className="text-red-500 mt-4">{error}</p>}
-
-      <div className="mt-4">
-        {/* Displaying Articles */}
-        {articles.length > 0 ? (
-          <div>
-            <ul>
-              {articles.map((article, index) => (
-                <li key={index} className="mb-4 border-b pb-4">
-                  <h3 className="text-lg font-bold">{article.headline}</h3>
-                  {article.image_url}
-                  {article.image_url && (
-                    <img
-                        src={article.image_url}
-                        alt={article.headline}
-                        className="w-full h-48 object-cover"
+    <main role="main" className="container mx-auto">
+        <div className="body">
+            <div className="flex flex-col md:flex-row p-4">
+                {/* Left Side Filters */}
+                <div className="w-full bg-base md:w-1/4 mb-4 md:mb-0 p-4 rounded-lg  h-full glass">
+                    <h2 className="text-xl font-semibold mb-4">Filter Articles</h2>
+                    <div className="mb-4">
+                    <label className="block mb-1">Keyword</label>
+                    <input
+                        type="text"
+                        value={keyword}
+                        onChange={(e) => setKeyword(e.target.value)}
+                        className="input input-bordered w-full"
                     />
-                    )}
-                  <p className="text-sm text-gray-600 mt-2">
-                    Published on: {new Date(article.publish_date).toLocaleDateString()}
-                  </p>
-                  <p className="mt-2">
-                    Source: <span className="font-semibold">{article.source}</span>
-                  </p>
-                  <a
-                    href={article.url}
-                    className="text-blue-600 mt-2 block"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Read More
-                  </a>
-                </li>
-              ))}
-            </ul>
+                    </div>
+                    <div className="mb-4">
+                    <label className="block mb-1">From</label>
+                    <input
+                        type="date"
+                        value={from}
+                        onChange={(e) => setFrom(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                    </div>
+                    <div className="mb-4">
+                    <label className="block mb-1">To</label>
+                    <input
+                        type="date"
+                        value={to}
+                        onChange={(e) => setTo(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                    </div>
+                    <div className="mb-4">
+                    <label className="block mb-1">Source</label>
+                    <input
+                        type="text"
+                        value={source}
+                        onChange={(e) => setSource(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                    </div>
+                    <div className="mb-4">
+                    <label className="block mb-1">Category</label>
+                    <input
+                        type="text"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="input input-bordered w-full"
+                    />
+                    </div>
+                    <button
+                    onClick={handleSearch}
+                    className="btn btn-primary w-full"
+                    disabled={loading}
+                    >
+                    {loading ? 'Searching...' : 'Search'}
+                    </button>
+                </div>
 
+                {/* Right Side Articles Cards */}
+                <div className="w-full md:w-3/4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                    {error && <p className="text-red-500 mb-4">{error}</p>}
+
+                    {/* Displaying Articles */}
+                    {/* <div className="card glass w-90"> */}
+                    
+                    {articles.length > 0 ? (
+                        articles.map((item, index) => (
+                            <Fragment className="" key={index}>
+                                <ArticleCard article={item}/>
+                            </Fragment>
+                        ))
+                    ) : (
+                        <p className="col-span-3 text-center">No articles found.</p>
+                    )}
+                    {/* </div> */}
+
+                    
+                </div>
+            </div>
             {/* Load More Button */}
             {hasMore && (
-              <button onClick={handleLoadMore} className="btn btn-secondary mt-4">
-                Load More
-              </button>
-            )}
-          </div>
-        ) : (
-          <p>No articles found.</p>
-        )}
-      </div>
-    </div>
+                    <div className="flex justify-center mt-8">
+                        <button onClick={handleLoadMore} className="btn btn-secondary">
+                        Load More
+                        </button>
+                    </div>
+                    )}
+        </div>
+    </main>
   );
 };
 
