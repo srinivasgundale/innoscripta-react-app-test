@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:8000/api/news/search';
 
-const searchArticles = async ({ keyword, from, to, source, category, limit, page, token }) => {
+const searchArticles = async ({ keyword, from, to, source, category, limit, page, token, mainSource }) => {
   try {
     const response = await axios.post(
       API_URL,
@@ -12,6 +12,7 @@ const searchArticles = async ({ keyword, from, to, source, category, limit, page
         to,
         source,
         category,
+        mainSource,
         limit,
         page,
       },
