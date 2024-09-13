@@ -1,70 +1,137 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Innoscripta Full Stack Project Setup
 
-## Available Scripts
+This guide will walk you through the steps to set up both the backend (Laravel) and frontend (React) of the Innoscripta project using Docker. After completing the backend Laravel setup, follow these instructions to set up the frontend.
 
-In the project directory, you can run:
+## Backend (Laravel) Setup Recap
 
-### `npm start`
+Make sure you've completed the setup for the backend Laravel project before proceeding with the frontend.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **Clone the Backend Repository**:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+   Clone the backend repository from GitHub:
 
-### `npm test`
+   ```bash
+   git clone https://github.com/srinivasgundale/innoscripta-laravel.git
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Navigate to the Project Directory**:
 
-### `npm run build`
+   ```bash
+   cd innoscripta-laravel
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+3. **Set up Environment Variables**:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+   Ensure that you have a `.env` file at the root of your project. You can copy the `.env.example` and modify it as necessary:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+   ```bash
+   cp .env.example .env
+   ```
 
-### `npm run eject`
+4. **Start the Docker Containers**:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   To build and run the backend application, use:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   ```bash
+   docker-compose up --build
+   ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+5. **Run Laravel Commands**:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+   Set up the Laravel application by running these commands:
 
-## Learn More
+   - Clear the configuration cache:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+     ```bash
+     docker-compose exec app php artisan config:clear
+     ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   - Cache the configuration:
 
-### Code Splitting
+     ```bash
+     docker-compose exec app php artisan config:cache
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   - Run database migrations:
 
-### Analyzing the Bundle Size
+     ```bash
+     docker-compose exec app php artisan migrate
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+   - Install Laravel Passport:
 
-### Making a Progressive Web App
+     ```bash
+     docker-compose exec app php artisan passport:install
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   - Set proper file permissions:
 
-### Advanced Configuration
+     ```bash
+     docker-compose exec app chmod -R 777 storage bootstrap/cache
+     ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+6. **Access the Backend Application**:
 
-### Deployment
+   The backend application should now be accessible at:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+   - [http://localhost:8000](http://localhost:8000) (or the port you specified in your Docker Compose setup).
 
-### `npm run build` fails to minify
+## Frontend (React) Setup
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Once the backend Laravel project is running, follow the steps below to set up the frontend React project.
+
+### Steps to Set Up the React Frontend
+
+1. **Clone the React Repository**:
+
+   Clone the frontend repository from GitHub:
+
+   ```bash
+   git clone https://github.com/srinivasgundale/innoscripta-react-app-test.git
+   ```
+
+2. **Navigate to the Project Directory**:
+
+   ```bash
+   cd innoscripta-react-app-test
+   ```
+
+3. **Start the Docker Containers**:
+
+   Build and run the React frontend application with Docker:
+
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the Frontend Application**:
+
+   Once the build is complete, the frontend will be accessible at:
+
+   - **Frontend Application**: [http://localhost:8080](http://localhost:8080) (You can change the port in the `docker-compose.yml` file if needed).
+
+### Important: Updating Backend URL in Frontend
+
+If you make changes to the port number or domain for the backend Laravel project, ensure that you update the base URL in the frontend. This is necessary so that the frontend can communicate with the backend.
+
+1. Open the file `src/utils/constants.js` in the React project directory.
+2. Update the `API_BASE_URL` variable with the new URL for the backend.
+
+For example:
+
+```javascript
+export const API_BASE_URL = 'http://localhost:8000'; // Update this to match the backend URL
+```
+
+### Additional Notes
+
+- If you encounter any issues, ensure both Docker containers (backend and frontend) are running and correctly configured.
+- The backend Laravel application should be running before the frontend React application is accessed.
+
+## Conclusion
+
+By following the steps outlined above, you should have both the backend (Laravel) and frontend (React) applications up and running using Docker. Ensure that the backend URL is correctly set in the React frontend to allow proper communication between the two.
+
+If you encounter any issues or have questions, feel free to create an issue in the respective repositories.
+
